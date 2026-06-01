@@ -41,9 +41,10 @@ public class GameService {
     }
 
     public void deleteGame(UUID gameId) {
-        if (!repository.deleteById(gameId)) {
-            throw new GameNotFoundException(gameId);
-        }
+        withGameLock(gameId, game -> {
+            repository.deleteById(gameId);
+            return null;
+        });
         log.info("Deleted game {}", gameId);
     }
 
@@ -91,9 +92,9 @@ public class GameService {
     }
 
     public List<Card> playerCards(UUID gameId, int playerId) {
-        return withGameLock(gameId, game -> game.findPlayer(playerId)
+        return withGameLock(gameId, game -> List.copyOf(game.findPlayer(playerId)
             .orElseThrow(() -> new PlayerNotFoundException(playerId))
-            .hand());
+            .hand()));
     }
 
     public Map<Suit, Integer> suitCounts(UUID gameId) {

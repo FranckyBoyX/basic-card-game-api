@@ -4,6 +4,7 @@ import com.example.cardgame.service.GameNotFoundException;
 import com.example.cardgame.service.PlayerNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,6 +43,13 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(
             HttpStatus.BAD_REQUEST, "Invalid value for parameter '" + ex.getName() + "'");
+        pd.setTitle("Invalid request");
+        return pd;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail handleMessageNotReadable(HttpMessageNotReadableException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Malformed request body");
         pd.setTitle("Invalid request");
         return pd;
     }
