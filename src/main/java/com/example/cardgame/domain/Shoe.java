@@ -2,6 +2,7 @@ package com.example.cardgame.domain;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumMap;
@@ -9,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The game's shoe: the ordered collection of UNDEALT cards.
@@ -68,5 +70,22 @@ public class Shoe {
             .sorted(Map.Entry.comparingByKey(REMAINING_ORDER))
             .forEach(e -> result.add(new CardCount(e.getKey(), e.getValue())));
         return result;
+    }
+
+    /**
+     * Randomly permutes the shoe using a hand-rolled Fisher-Yates shuffle.
+     * Uses a library RNG but NOT a library shuffle, per the assignment.
+     */
+    public void shuffle() {
+        Card[] arr = cards.toArray(new Card[0]);
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+        for (int i = arr.length - 1; i > 0; i--) {
+            int j = rnd.nextInt(i + 1);
+            Card tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+        }
+        cards.clear();
+        Collections.addAll(cards, arr);
     }
 }
