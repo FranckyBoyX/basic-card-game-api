@@ -12,7 +12,12 @@ This project uses [mise](https://mise.jdx.dev) to pin the toolchain (Java 25 + M
    ```bash
    mise install
    ```
-   This provides Java 25 and Maven; all `mvn` commands below run against them.
+3. Activate mise in your shell so `java` and `mvn` are on your PATH:
+   ```bash
+   # bash / zsh — add this to your shell profile to make it permanent
+   eval "$(mise activate bash)"   # or: eval "$(mise activate zsh)"
+   ```
+   Alternatively, prefix every command with `mise exec --` (e.g. `mise exec -- mvn test`).
 
 ## Run
 
